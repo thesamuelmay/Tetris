@@ -22,8 +22,8 @@ paddle_height = 150
 ball_size = 25
 
 
-paddle_speed = 5
-ball_speed_initial = 3
+paddle_speed = 10
+ball_speed_initial = 6
 
 
 player1_score = 0
