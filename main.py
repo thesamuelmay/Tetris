@@ -17,6 +17,11 @@ play_width = 300  # meaning 300 // 10 = 30 width per block
 play_height = 600  # meaning 600 // 20 = 20 height per blo ck
 block_size = 30
 score = 0
+White = (255,255,255)
+Black = (0,0,0)
+Grey = (105,105,105)
+BG = (0,0,0)
+
 
 
 top_left_x = (s_width - play_width) // 2
@@ -262,6 +267,7 @@ def draw_grid(surface, row, col):
 def clear_rows(grid, locked):
     # need to see if row is clear the shift every other row above down one
     global score
+   
 
     inc = 0
     for i in range(len(grid)-1,-1,-1):
@@ -271,6 +277,8 @@ def clear_rows(grid, locked):
             # add positions to remove from locked
             score+= 1
             print(score)
+            
+
             ind = i
             for j in range(len(row)):
                 try:
@@ -341,6 +349,7 @@ def main():
     global run
     global grid
     global change_piece
+    
 
     locked_positions = {}  # (x,y):(255,0,0)
     grid = create_grid(locked_positions)
@@ -352,6 +361,10 @@ def main():
     clock = pygame.time.Clock()
     fall_time = 0
 
+
+    
+
+
     move_delay = 100  # Delay in milliseconds for a repeat movement
     quick_drop_speed = 50  # Delay in milliseconds for quick drop
 
@@ -360,9 +373,21 @@ def main():
 
     # Quick drop variables
     quick_drop = False
-
+    font = pygame.font.Font('freesansbold.ttf', 40)
+    text = font.render(str(score), True, Grey)
+    textRect = text.get_rect(center=(650,200))
+    scoretext = font.render('score', True, White)
     while run:
         fall_speed = 0.27
+        
+        text = font.render(str(score), True, White)
+        win.blit(text,textRect,)
+        pygame.display.flip()
+        pygame.display.update()
+        
+
+        
+
 
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
@@ -453,6 +478,8 @@ def main():
             run = False
             main_menu()
 
+    pygame.display.flip()
+    pygame.display.update()
 
 
 
