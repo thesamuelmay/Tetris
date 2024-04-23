@@ -16,6 +16,7 @@ play_width = 300  # meaning 300 // 10 = 30 width per block
 play_height = 600  # meaning 600 // 20 = 20 height per blo ck
 block_size = 30
 
+
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
 
@@ -428,22 +429,46 @@ def main():
     pygame.time.delay(2000)
 
 
+
 def main_menu():
-    run = True
-    while run:
-        win.fill((0,0,0))
-        draw_text_middle('Press any key to begin.', 60, (255, 255, 255), win)
-        pygame.display.update()
+    run = False
+    Main_open = True
+    imgX=200
+    imgY=40
+    PlayB = pygame.image.load(texture_path+ 'Play.png').convert()
+    MenuButtonDefultSize = (imgX, imgY)
+    PlayB = pygame.transform.scale(PlayB, MenuButtonDefultSize)
+    button = pygame.rect.Rect(s_width/2-75,350,imgX,imgY)
+    BG = (0,0,0)
+    def draw_bg():
+        win.fill(BG)
+
+    while Main_open:
+        win.fill((BG))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                print("Closed")
+                Main_open = False
+                
 
-            if event.type == pygame.KEYDOWN:
-                main()
-    pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button.collidepoint(event.pos):
+                    print('hi')
+                    Main_open = False
+                    main()
+    
+        a,b = pygame.mouse.get_pos()
+        if button.x <= a <= button.x +imgX and button.y <= b <= button.y + imgY:
+            win.blit(PlayB, (s_width/2-(imgX/2),350))
+        else:
+            win.blit(PlayB, (s_width/2-(imgX/2),350))
+        pygame.display.flip()
+        pygame.display.update()  
+   # pygame.quit()
 
 
-win = pygame.display.set_mode((s_width, s_height))
+
 pygame.display.set_caption('Tetris')
 
 main_menu()  # start game
