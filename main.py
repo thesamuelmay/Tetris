@@ -373,6 +373,7 @@ def main():
 
     # Quick drop variables
     quick_drop = False
+    
     font = pygame.font.Font('freesansbold.ttf', 40)
     text = font.render(str(score), True, Grey)
     textRect = text.get_rect(center=(650,200))
