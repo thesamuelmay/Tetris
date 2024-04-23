@@ -141,7 +141,7 @@ textures = {
     'Z': pygame.image.load(texture_path + 'Red.png').convert(),
     'I': pygame.image.load(texture_path + 'Blue.png').convert(),
     'O': pygame.image.load(texture_path + 'Yellow.png').convert(),
-    'J': pygame.image.load(texture_path + 'Purple.png').convert(),
+    'J': pygame.image.load(texture_path + 'Green.png').convert(),
     'L': pygame.image.load(texture_path + 'Purple.png').convert(),  # Change as necessary
     'T': pygame.image.load(texture_path + 'Yellow.png').convert(),  # Change as necessary
 }
@@ -334,6 +334,7 @@ def timeout():
     change_piece = True
 
 def main():
+    global run
     global grid
     global change_piece
 
@@ -442,16 +443,20 @@ def main():
 
         # Check if user lost
         if check_lost(locked_positions):
+            draw_text_middle("You Lost", 40, (255,255,255), win)
+            pygame.display.update()
+            pygame.time.delay(2000)
             run = False
+            main_menu()
 
-    draw_text_middle("You Lost", 40, (255,255,255), win)
-    pygame.display.update()
-    pygame.time.delay(2000)
+
 
 
 
 def main_menu():
+    global run
     run = False
+    print(run)
     Main_open = True
     imgX=200
     imgY=40
@@ -476,6 +481,7 @@ def main_menu():
                 if button.collidepoint(event.pos):
                     print('hi')
                     Main_open = False
+                    run = True
                     main()
     
         a,b = pygame.mouse.get_pos()
