@@ -18,4 +18,4 @@ Life is a moderately good play with a badly written third act." –Truman Capote
 “I wish I could go back to the day I met you and just walk away.” - Unknown
 “I’m not crying because of you; you’re not worth it. I’m crying because my delusion of who you were was shattered by the truth of who you are.” - Steve Maraboli
 “To live in a hallucination of being loved is more painful than rejection.” - Vinaya Panicker
-Make sure to read this around 2000 times before running the file:)
+

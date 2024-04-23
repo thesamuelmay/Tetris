@@ -465,8 +465,7 @@ def main_menu():
             win.blit(PlayB, (s_width/2-(imgX/2),350))
         pygame.display.flip()
         pygame.display.update()  
-   # pygame.quit()
-
+       # pygame.quit()
 
 
 pygame.display.set_caption('Tetris')
