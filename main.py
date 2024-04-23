@@ -1,5 +1,6 @@
 import pygame
 import random
+from threading import Timer
 
 """
 10 x 20 square grid
@@ -329,9 +330,12 @@ def draw_window(surface,grid, current_piece, locked_positions):
     pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 5)
     # pygame.display.update()
 
+def timeout():
+    change_piece = True
 
 def main():
     global grid
+    global change_piece
 
     locked_positions = {}  # (x,y):(255,0,0)
     grid = create_grid(locked_positions)
@@ -342,6 +346,15 @@ def main():
     next_piece = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
+
+    move_delay = 100  # Delay in milliseconds for a repeat movement
+    quick_drop_speed = 50  # Delay in milliseconds for quick drop
+
+    last_move_sideways_time = pygame.time.get_ticks()  # Time when the last move was made sideways
+    last_quick_drop_time = pygame.time.get_ticks()  # Tim   
+
+    # Quick drop variables
+    quick_drop = False
 
     while run:
         fall_speed = 0.27
@@ -357,40 +370,47 @@ def main():
             if not (valid_space(current_piece, grid)) and current_piece.y > 0:
                 current_piece.y -= 1
                 change_piece = True
-
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.display.quit()
                 quit()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    current_piece.x -= 1
-                    if not valid_space(current_piece, grid):
-                        current_piece.x += 1
+        
+            if event.type == pygame.KEYDOWN :
 
-                elif event.key == pygame.K_RIGHT:
-                    current_piece.x += 1
-                    if not valid_space(current_piece, grid):
-                        current_piece.x -= 1
-                elif event.key == pygame.K_UP:
+                if event.key == pygame.K_UP:
                     # rotate shape
                     current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
                     if not valid_space(current_piece, grid):
                         current_piece.rotation = current_piece.rotation - 1 % len(current_piece.shape)
-
-                if event.key == pygame.K_DOWN:
-                    # move shape down
-                    current_piece.y += 1
-                    if not valid_space(current_piece, grid):
-                        current_piece.y -= 1
 
                 if event.key == pygame.K_SPACE:
                     while valid_space(current_piece, grid):
                         current_piece.y += 1
                     current_piece.y -= 1
                     print(convert_shape_format(current_piece))  # todo fix
+
+        keys_pressed = pygame.key.get_pressed()
+
+        if keys_pressed[pygame.K_LEFT] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
+            current_piece.x -= 1
+            if not valid_space(current_piece, grid):
+                current_piece.x += 1
+            last_move_sideways_time = pygame.time.get_ticks()
+
+        if keys_pressed[pygame.K_RIGHT] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
+            current_piece.x += 1
+            if not valid_space(current_piece, grid):
+                current_piece.x -= 1
+            last_move_sideways_time = pygame.time.get_ticks()
+
+        if keys_pressed[pygame.K_DOWN] and pygame.time.get_ticks() - last_quick_drop_time > quick_drop_speed:
+            current_piece.y += 1
+            if not valid_space(current_piece, grid):
+                current_piece.y -= 1
+            last_quick_drop_time = pygame.time.get_ticks()
 
         shape_pos = convert_shape_format(current_piece)
         formatted = convert_shape_format(current_piece)
