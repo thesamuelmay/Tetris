@@ -19,7 +19,7 @@ block_size = 30
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
 
-
+win = pygame.display.set_mode((s_width, s_height))
 # SHAPE FORMATS
 
 S = [['.....',
@@ -129,16 +129,50 @@ shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 16
 # index 0 - 6 represent shape
 
 
-class Piece(object):
-    rows = 20  # y
-    columns = 10  # x
 
-    def __init__(self, column, row, shape):
+# Define the path to your textures
+texture_path = 'MAT2GUI/'  # Update this to the actual path
+
+# Load textures
+textures = {
+    'S': pygame.image.load(texture_path + 'Green.png').convert(),
+    'Z': pygame.image.load(texture_path + 'Red.png').convert(),
+    'I': pygame.image.load(texture_path + 'Blue.png').convert(),
+    'O': pygame.image.load(texture_path + 'Yellow.png').convert(),
+    'J': pygame.image.load(texture_path + 'Purple.png').convert(),
+    'L': pygame.image.load(texture_path + 'Purple.png').convert(),  # Change as necessary
+    'T': pygame.image.load(texture_path + 'Yellow.png').convert(),  # Change as necessary
+}
+
+class Piece(object):
+    def __init__(self, column, row, shape, type):
         self.x = column
         self.y = row
         self.shape = shape
         self.color = shape_colors[shapes.index(shape)]
-        self.rotation = 0  # number from 0-3
+        self.rotation = 0
+        self.type = type  # Added type attribute
+
+
+
+def get_shape():
+    global shapes, shape_colors
+
+    # New dictionary to map shapes to their types
+    shape_types = {
+        0: 'S',
+        1: 'Z',
+        2: 'I',
+        3: 'O',
+        4: 'J',
+        5: 'L',
+        6: 'T'
+    }
+    chosen_shape = random.choice(shapes)
+    return Piece(5, 0, chosen_shape, shape_types[shapes.index(chosen_shape)])
+
+
+
 
 
 def create_grid(locked_positions={}):
@@ -192,7 +226,18 @@ def check_lost(positions):
 def get_shape():
     global shapes, shape_colors
 
-    return Piece(5, 0, random.choice(shapes))
+    # Mapping shapes to their string representation 'S', 'Z', 'I', 'O', 'J', 'L', 'T'
+    shape_types = ['S', 'Z', 'I', 'O', 'J', 'L', 'T']
+
+    # Randomly choose a shape
+    chosen_shape = random.choice(shapes)
+    # Get the index of the chosen shape
+    shape_index = shapes.index(chosen_shape)
+    # Use the index to get the shape type ('S', 'Z', 'I', 'O', 'J', 'L', 'T')
+    shape_type = shape_types[shape_index]
+
+    return Piece(5, 0, chosen_shape, shape_type)
+
 
 
 def draw_text_middle(text, size, color, surface):
@@ -240,18 +285,29 @@ def draw_next_shape(shape, surface):
 
     sx = top_left_x + play_width + 50
     sy = top_left_y + play_height/2 - 100
-    format = shape.shape[shape.rotation % len(shape.shape)]
+    formatted = convert_shape_format(shape)
 
-    for i, line in enumerate(format):
-        row = list(line)
-        for j, column in enumerate(row):
-            if column == '0':
-                pygame.draw.rect(surface, shape.color, (sx + j*30, sy + i*30, 30, 30), 0)
-
-    surface.blit(label, (sx + 10, sy- 30))
+    for (x, y) in formatted:
+        if shape.type in textures:
+            texture = textures[shape.type]
+            surface.blit(texture, (sx + (x-2) * block_size, sy + (y-4) * block_size))  # Adjust x, y for next shape display
 
 
-def draw_window(surface):
+
+def draw_piece(surface, grid, piece):
+    formatted_shape = convert_shape_format(piece)
+
+    for (x, y) in formatted_shape:
+        if y > -1:  # If the y position is on the screen
+            texture = textures[piece.type]
+            # Transform grid position to pixel coordinates for blitting
+            pixel_x = top_left_x + x * block_size
+            pixel_y = top_left_y + y * block_size
+            # Blit the texture instead of drawing a rectangle
+            surface.blit(texture, (pixel_x, pixel_y))
+
+
+def draw_window(surface,grid, current_piece, locked_positions):
     surface.fill((0,0,0))
     # Tetris Title
     font = pygame.font.SysFont('comicsans', 60)
@@ -259,10 +315,14 @@ def draw_window(surface):
 
     surface.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 30))
 
-    for i in range(len(grid)):
-        for j in range(len(grid[i])):
-            pygame.draw.rect(surface, grid[i][j], (top_left_x + j* 30, top_left_y + i * 30, 30, 30), 0)
+    draw_piece(surface, grid, current_piece)
 
+    for (x, y), shape_type in locked_positions.items():
+        if shape_type in textures:
+            texture = textures[shape_type]
+            pixel_x = top_left_x + x * block_size
+            pixel_y = top_left_y + y * block_size
+            surface.blit(texture, (pixel_x, pixel_y))
     # draw grid and border
     draw_grid(surface, 20, 10)
     pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 5)
@@ -332,8 +392,11 @@ def main():
                     print(convert_shape_format(current_piece))  # todo fix
 
         shape_pos = convert_shape_format(current_piece)
+        formatted = convert_shape_format(current_piece)
 
         # add piece to the grid for drawing
+        
+        
         for i in range(len(shape_pos)):
             x, y = shape_pos[i]
             if y > -1:
@@ -343,7 +406,8 @@ def main():
         if change_piece:
             for pos in shape_pos:
                 p = (pos[0], pos[1])
-                locked_positions[p] = current_piece.color
+                # Store the shape type in locked_positions instead of color
+                locked_positions[p] = current_piece.type
             current_piece = next_piece
             next_piece = get_shape()
             change_piece = False
@@ -351,7 +415,7 @@ def main():
             # call four times to check for multiple clear rows
             clear_rows(grid, locked_positions)
 
-        draw_window(win)
+        draw_window(win, grid, current_piece,locked_positions)
         draw_next_shape(next_piece, win)
         pygame.display.update()
 
@@ -382,4 +446,4 @@ def main_menu():
 win = pygame.display.set_mode((s_width, s_height))
 pygame.display.set_caption('Tetris')
 
-main()  # start game
+main_menu()  # start game
