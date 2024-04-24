@@ -263,7 +263,9 @@ def draw_grid(surface, row, col):
         for j in range(col):
             pygame.draw.line(surface, (128,128,128), (sx + j * 30, sy), (sx + j * 30, sy + play_height))  # vertical lines
 
-
+########
+#SCORES CALCULATE HERE
+########
 def clear_rows(grid, locked):
     # need to see if row is clear the shift every other row above down one
     global score
@@ -277,6 +279,7 @@ def clear_rows(grid, locked):
             # add positions to remove from locked
             score+= 1
             print(score)
+
             
 
             ind = i
@@ -308,6 +311,14 @@ def draw_next_shape(shape, surface):
 
 
 
+
+
+def draw_score(surface, x, y):
+    global score
+    font = pygame.font.SysFont('comicsans', 30)
+    label = font.render(f'Score: {score}', 1, (255, 255, 255))
+    surface.blit(label, (x, y))
+
 def draw_piece(surface, grid, piece):
     formatted_shape = convert_shape_format(piece)
 
@@ -322,12 +333,15 @@ def draw_piece(surface, grid, piece):
 
 
 def draw_window(surface,grid, current_piece, locked_positions):
+    global score
     surface.fill((0,0,0))
     # Tetris Title
     font = pygame.font.SysFont('comicsans', 60)
     label = font.render('TETRIS', 1, (255,255,255))
 
     surface.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 30))
+
+    draw_score(surface, 30, 30)
 
     draw_piece(surface, grid, current_piece)
 
@@ -349,6 +363,7 @@ def main():
     global run
     global grid
     global change_piece
+    global score
     
 
     locked_positions = {}  # (x,y):(255,0,0)
@@ -374,19 +389,9 @@ def main():
     # Quick drop variables
     quick_drop = False
     
-    font = pygame.font.Font('freesansbold.ttf', 40)
-    text = font.render(str(score), True, Grey)
-    textRect = text.get_rect(center=(650,200))
-    scoretext = font.render('score', True, White)
+
     while run:
         fall_speed = 0.27
-        
-        text = font.render(str(score), True, White)
-        win.blit(text,textRect,)
-        pygame.display.flip()
-        pygame.display.update()
-        
-
         
 
 
