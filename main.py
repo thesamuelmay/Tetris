@@ -410,7 +410,10 @@ def main():
 
         
             if event.type == pygame.KEYDOWN :
-
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+                    pygame.display.quit()
+                    quit()
                 if event.key == pygame.K_UP:
                     # rotate shape
                     current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
