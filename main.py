@@ -148,8 +148,8 @@ textures = {
     'I': pygame.image.load(texture_path + 'Blue.png').convert(),
     'O': pygame.image.load(texture_path + 'Yellow.png').convert(),
     'J': pygame.image.load(texture_path + 'Green.png').convert(),
-    'L': pygame.image.load(texture_path + 'Purple.png').convert(),  # Change as necessary
-    'T': pygame.image.load(texture_path + 'Yellow.png').convert(),  # Change as necessary
+    'L': pygame.image.load(texture_path + 'Orange.png').convert(),  # Change as necessary
+    'T': pygame.image.load(texture_path + 'Aqua.png').convert(),  # Change as necessary
 }
 
 class Piece(object):
