@@ -148,8 +148,6 @@ textures = {
     'I': pygame.image.load(texture_path + 'Blue.png').convert(),
     'O': pygame.image.load(texture_path + 'Yellow.png').convert(),
     'J': pygame.image.load(texture_path + 'Green.png').convert(),
-    'L': pygame.image.load(texture_path + 'Purple.png').convert(),
-    'T': pygame.image.load(texture_path + 'Yellow.png').convert()
 }
 
 class Piece(object):
@@ -415,7 +413,10 @@ def main():
 
         
             if event.type == pygame.KEYDOWN :
-
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+                    pygame.display.quit()
+                    quit()
                 if event.key == pygame.K_UP:
                     # rotate shape
                     current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
