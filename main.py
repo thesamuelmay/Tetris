@@ -148,8 +148,8 @@ textures = {
     'I': pygame.image.load(texture_path + 'Blue.png').convert(),
     'O': pygame.image.load(texture_path + 'Yellow.png').convert(),
     'J': pygame.image.load(texture_path + 'Green.png').convert(),
-    'L': pygame.image.load(texture_path + 'Purple.png').convert(),  # Change as necessary
-    'T': pygame.image.load(texture_path + 'Yellow.png').convert(),  # Change as necessary
+    'L': pygame.image.load(texture_path + 'Purple.png').convert(),
+    'T': pygame.image.load(texture_path + 'Yellow.png').convert()
 }
 
 class Piece(object):
@@ -341,7 +341,7 @@ def draw_window(surface,grid, current_piece, locked_positions):
 
     surface.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 30))
 
-    draw_score(surface, 30, 30)
+    draw_score(surface, 650, 250)
 
     draw_piece(surface, grid, current_piece)
 
