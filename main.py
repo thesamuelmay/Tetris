@@ -17,6 +17,7 @@ play_width = 300  # meaning 300 // 10 = 30 width per block
 play_height = 600  # meaning 600 // 20 = 20 height per blo ck
 block_size = 30
 score = 0
+rowcheck = 0
 White = (255,255,255)
 Black = (0,0,0)
 Grey = (105,105,105)
@@ -269,6 +270,7 @@ def draw_grid(surface, row, col):
 def clear_rows(grid, locked):
     # need to see if row is clear the shift every other row above down one
     global score
+    global rowcheck
    
 
     inc = 0
@@ -277,8 +279,9 @@ def clear_rows(grid, locked):
         if (0, 0, 0) not in row:
             inc += 1
             # add positions to remove from locked
-            score+= 1
-            print(score)
+        
+            
+        
 
             
 
@@ -288,6 +291,17 @@ def clear_rows(grid, locked):
                     del locked[(j, i)]
                 except:
                     continue
+
+    if inc == 4:
+     scoremultiplyer = inc *4
+    elif inc == 3:
+        scoremultiplyer = inc*3
+    elif inc == 2:
+        scoremultiplyer = inc*2
+    else:
+        scoremultiplyer = inc
+    score+= scoremultiplyer
+    
     if inc > 0:
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
             x, y = key
