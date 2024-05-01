@@ -1,13 +1,14 @@
 import pygame
 import random
 from threading import Timer
+from pygame import mixer
 
 """
 10 x 20 square grid
 shapes: S, Z, I, O, J, L, T
 represented in order by 0 - 6
 """
-
+pygame.init()
 pygame.font.init()
 
 # GLOBALS VARS
@@ -22,8 +23,8 @@ White = (255,255,255)
 Black = (0,0,0)
 Grey = (105,105,105)
 BG = (0,0,0)
-
-
+touchdown = mixer.Sound('placed.wav')
+remove = mixer.Sound('score.wav')
 
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
@@ -271,13 +272,15 @@ def clear_rows(grid, locked):
     # need to see if row is clear the shift every other row above down one
     global score
     global rowcheck
-   
+    
+    
 
     inc = 0
     for i in range(len(grid)-1,-1,-1):
         row = grid[i]
         if (0, 0, 0) not in row:
             inc += 1
+            remove.play()
             # add positions to remove from locked
         
             
@@ -291,7 +294,8 @@ def clear_rows(grid, locked):
                     del locked[(j, i)]
                 except:
                     continue
-
+    
+    touchdown.play()
     if inc == 4:
      scoremultiplyer = inc *4
     elif inc == 3:
