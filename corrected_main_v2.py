@@ -11,13 +11,13 @@ represented in order by 0 - 6
 pygame.font.init()
 
 # GLOBALS VARS
-s_width = 800
+s_width = 1600  # doubled to accommodate two players
 s_height = 700
 play_width = 300  # meaning 300 // 10 = 30 width per block
 play_height = 600  # meaning 600 // 20 = 20 height per blo ck
 block_size = 30
 score = 0
-rowcheck = 0
+score2 = 0  # score for player 2
 White = (255,255,255)
 Black = (0,0,0)
 Grey = (105,105,105)
@@ -28,7 +28,7 @@ BG = (0,0,0)
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
 
-win = pygame.display.set_mode((s_width, s_height))
+win = pygame.display.set_mode((s_width, s_height))  # Adjusted for two players
 # SHAPE FORMATS
 
 S = [['.....',
@@ -270,7 +270,6 @@ def draw_grid(surface, row, col):
 def clear_rows(grid, locked):
     # need to see if row is clear the shift every other row above down one
     global score
-    global rowcheck
    
 
     inc = 0
@@ -279,6 +278,10 @@ def clear_rows(grid, locked):
         if (0, 0, 0) not in row:
             inc += 1
             # add positions to remove from locked
+            score+= 1
+            print(score)
+
+            
 
             ind = i
             for j in range(len(row)):
@@ -286,17 +289,6 @@ def clear_rows(grid, locked):
                     del locked[(j, i)]
                 except:
                     continue
-    
-    if inc == 4:
-     scoremultiplyer = inc *4
-    elif inc == 3:
-        scoremultiplyer = inc*3
-    elif inc == 2:
-        scoremultiplyer = inc*2
-    else:
-        scoremultiplyer = inc
-    score+= scoremultiplyer
-
     if inc > 0:
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
             x, y = key
@@ -400,6 +392,83 @@ def main():
     
 
     while run:
+
+    # Handle Player 1 input
+
+events = pygame.event.get()
+for event in events:
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            # Player 1 moves left
+            pass
+        elif event.key == pygame.K_a:
+            # Move left Player 2
+            pass
+        elif event.key == pygame.K_d:
+            # Move right Player 2
+            pass
+        elif event.key == pygame.K_RIGHT:
+            # Player 1 moves right
+            pass
+        elif event.key == pygame.K_a:
+            # Player 2 moves left
+            pass
+        elif event.key == pygame.K_d:
+            # Player 2 moves right
+            pass
+
+            elif event.key == pygame.K_RIGHT:  # Adjust keys for Player 2
+                # Move right Player 1
+                pass
+
+    # Update game state for Player 1
+    # Check if piece should move down
+    # Rotate piece
+    # Check for line clear
+
+    # Draw Player 1 game state
+    draw_grid(surface, grid)  # Assuming separate grids for each player
+    draw_next_shape(next_piece1, surface)  # Assuming separate next pieces
+    update_score(win, surface, score1)  # Assuming separate scores
+
+# Draw grids for both players
+draw_grid(surface, grid, offset=(0, 0))  # Player 1's grid at left half of the screen
+draw_grid(surface, grid, offset=(800, 0))  # Player 2's grid at right half of the screen
+
+
+
+    # Handle Player 2 input
+
+events = pygame.event.get()
+for event in events:
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            # Player 1 moves left
+            pass
+        elif event.key == pygame.K_RIGHT:
+            # Player 1 moves right
+            pass
+        elif event.key == pygame.K_a:
+            # Player 2 moves left
+            pass
+        elif event.key == pygame.K_d:
+            # Player 2 moves right
+            pass
+
+            elif event.key == pygame.K_d:  # Adjust keys for Player 2
+                # Move right Player 2
+                pass
+
+    # Update game state for Player 2
+    # Check if piece should move down
+    # Rotate piece
+    # Check for line clear
+
+    # Draw Player 2 game state
+    draw_grid(surface, grid)  # Assuming separate grids for each player
+    draw_next_shape(next_piece2, surface)  # Assuming separate next pieces
+    update_score(win, surface, score2)  # Assuming separate scores
+
         fall_speed = 0.27
         
 
@@ -416,10 +485,23 @@ def main():
                 current_piece.y -= 1
                 change_piece = True
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                pygame.display.quit()
+
+events = pygame.event.get()
+for event in events:
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            # Player 1 moves left
+            pass
+        elif event.key == pygame.K_RIGHT:
+            # Player 1 moves right
+            pass
+        elif event.key == pygame.K_a:
+            # Player 2 moves left
+            pass
+        elif event.key == pygame.K_d:
+            # Player 2 moves right
+            pass
+
                 quit()
 
         
@@ -428,7 +510,7 @@ def main():
                     run = False
                     pygame.display.quit()
                     quit()
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_UP:
                     # rotate shape
                     current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
                     if not valid_space(current_piece, grid):
@@ -442,19 +524,19 @@ def main():
 
         keys_pressed = pygame.key.get_pressed()
 
-        if keys_pressed[pygame.K_a] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
+        if keys_pressed[pygame.K_LEFT] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
             current_piece.x -= 1
             if not valid_space(current_piece, grid):
                 current_piece.x += 1
             last_move_sideways_time = pygame.time.get_ticks()
 
-        if keys_pressed[pygame.K_d] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
+        if keys_pressed[pygame.K_RIGHT] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
             current_piece.x += 1
             if not valid_space(current_piece, grid):
                 current_piece.x -= 1
             last_move_sideways_time = pygame.time.get_ticks()
 
-        if keys_pressed[pygame.K_s] and pygame.time.get_ticks() - last_quick_drop_time > quick_drop_speed:
+        if keys_pressed[pygame.K_DOWN] and pygame.time.get_ticks() - last_quick_drop_time > quick_drop_speed:
             current_piece.y += 1
             if not valid_space(current_piece, grid):
                 current_piece.y -= 1
@@ -504,9 +586,7 @@ def main():
 
 def main_menu():
     global run
-    global score
     run = False
-    score = 0
     print(run)
     Main_open = True
     imgX=200
@@ -521,13 +601,24 @@ def main_menu():
 
     while Main_open:
         win.fill((BG))
-        
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                print("Closed")
-                Main_open = False
-                
+
+events = pygame.event.get()
+for event in events:
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            # Player 1 moves left
+            pass
+        elif event.key == pygame.K_RIGHT:
+            # Player 1 moves right
+            pass
+        elif event.key == pygame.K_a:
+            # Player 2 moves left
+            pass
+        elif event.key == pygame.K_d:
+            # Player 2 moves right
+            pass
+
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button.collidepoint(event.pos):
