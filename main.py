@@ -24,9 +24,12 @@ Black = (0,0,0)
 Grey = (105,105,105)
 BG = (0,0,0)
 fall_speed = 0.27
+bag = []
+
 touchdown = mixer.Sound('placed.wav')
 remove = mixer.Sound('score.wav')
 Gameoversound = mixer.Sound('GameOver.wav')
+
 
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
@@ -167,10 +170,17 @@ class Piece(object):
 
 
 
-def get_shape():
-    global shapes, shape_colors
 
-    # New dictionary to map shapes to their types
+
+def get_shape():
+    global shapes, shape_colors, bag
+    
+    # Check if bag is empty
+    if not bag:
+        bag = shapes[:]
+        random.shuffle(bag)  # Shuffle Bag
+    
+   
     shape_types = {
         0: 'S',
         1: 'Z',
@@ -180,10 +190,10 @@ def get_shape():
         5: 'L',
         6: 'T'
     }
-    chosen_shape = random.choice(shapes)
+    
+    
+    chosen_shape = bag.pop(0) #Remove piece from bag
     return Piece(5, 0, chosen_shape, shape_types[shapes.index(chosen_shape)])
-
-
 
 
 
@@ -235,20 +245,6 @@ def check_lost(positions):
     return False
 
 
-def get_shape():
-    global shapes, shape_colors
-
-    # Mapping shapes to their string representation 'S', 'Z', 'I', 'O', 'J', 'L', 'T'
-    shape_types = ['S', 'Z', 'I', 'O', 'J', 'L', 'T']
-
-    # Randomly choose a shape
-    chosen_shape = random.choice(shapes)
-    # Get the index of the chosen shape
-    shape_index = shapes.index(chosen_shape)
-    # Use the index to get the shape type ('S', 'Z', 'I', 'O', 'J', 'L', 'T')
-    shape_type = shape_types[shape_index]
-
-    return Piece(5, 0, chosen_shape, shape_type)
 
 
 
