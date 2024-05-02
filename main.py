@@ -25,6 +25,7 @@ Grey = (105,105,105)
 BG = (0,0,0)
 touchdown = mixer.Sound('placed.wav')
 remove = mixer.Sound('score.wav')
+Gameoversound = mixer.Sound('GameOver.wav')
 
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
@@ -281,13 +282,9 @@ def clear_rows(grid, locked):
         if (0, 0, 0) not in row:
             inc += 1
             remove.play()
+            
             # add positions to remove from locked
         
-            
-        
-
-            
-
             ind = i
             for j in range(len(row)):
                 try:
@@ -326,10 +323,6 @@ def draw_next_shape(shape, surface):
         if shape.type in textures:
             texture = textures[shape.type]
             surface.blit(texture, (sx + (x-2) * block_size, sy + (y-4) * block_size))  # Adjust x, y for next shape display
-
-
-
-
 
 def draw_score(surface, x, y):
     global score
@@ -411,8 +404,6 @@ def main():
     while run:
         fall_speed = 0.27
         
-
-
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
         clock.tick()
@@ -500,6 +491,7 @@ def main():
         # Check if user lost
         if check_lost(locked_positions):
             draw_text_middle("You Lost", 40, (255,255,255), win)
+            Gameoversound.play()
             pygame.display.update()
             pygame.time.delay(2000)
             run = False
@@ -552,6 +544,6 @@ def main_menu():
        # pygame.quit()
 
 
-pygame.display.set_caption('Tetris')
+pygame.display.set_caption('Tetristhingy')
 
 main_menu()  # start game
