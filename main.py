@@ -285,14 +285,18 @@ def clear_rows(grid, locked):
             
             # add positions to remove from locked
         
+            
+        
+
+            
+
             ind = i
             for j in range(len(row)):
                 try:
                     del locked[(j, i)]
                 except:
                     continue
-    
-    touchdown.play()
+
     if inc == 4:
      scoremultiplyer = inc *4
     elif inc == 3:
@@ -302,7 +306,7 @@ def clear_rows(grid, locked):
     else:
         scoremultiplyer = inc
     score+= scoremultiplyer
-    
+
     if inc > 0:
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
             x, y = key
@@ -428,7 +432,7 @@ def main():
                     run = False
                     pygame.display.quit()
                     quit()
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_w:
                     # rotate shape
                     current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
                     if not valid_space(current_piece, grid):
@@ -442,19 +446,19 @@ def main():
 
         keys_pressed = pygame.key.get_pressed()
 
-        if keys_pressed[pygame.K_LEFT] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
+        if keys_pressed[pygame.K_a] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
             current_piece.x -= 1
             if not valid_space(current_piece, grid):
                 current_piece.x += 1
             last_move_sideways_time = pygame.time.get_ticks()
 
-        if keys_pressed[pygame.K_RIGHT] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
+        if keys_pressed[pygame.K_d] and pygame.time.get_ticks() - last_move_sideways_time > move_delay:
             current_piece.x += 1
             if not valid_space(current_piece, grid):
                 current_piece.x -= 1
             last_move_sideways_time = pygame.time.get_ticks()
 
-        if keys_pressed[pygame.K_DOWN] and pygame.time.get_ticks() - last_quick_drop_time > quick_drop_speed:
+        if keys_pressed[pygame.K_s] and pygame.time.get_ticks() - last_quick_drop_time > quick_drop_speed:
             current_piece.y += 1
             if not valid_space(current_piece, grid):
                 current_piece.y -= 1
@@ -505,7 +509,9 @@ def main():
 
 def main_menu():
     global run
+    global score
     run = False
+    score = 0
     print(run)
     Main_open = True
     imgX=200
@@ -520,6 +526,7 @@ def main_menu():
 
     while Main_open:
         win.fill((BG))
+        
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
