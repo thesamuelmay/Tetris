@@ -23,6 +23,7 @@ White = (255,255,255)
 Black = (0,0,0)
 Grey = (105,105,105)
 BG = (0,0,0)
+fall_speed = 0.27
 touchdown = mixer.Sound('placed.wav')
 remove = mixer.Sound('score.wav')
 
@@ -272,6 +273,7 @@ def clear_rows(grid, locked):
     # need to see if row is clear the shift every other row above down one
     global score
     global rowcheck
+    global fall_speed
     
     
 
@@ -289,7 +291,9 @@ def clear_rows(grid, locked):
                     del locked[(j, i)]
                 except:
                     continue
+    
 
+    touchdown.play()
     if inc == 4:
      scoremultiplyer = inc *4
     elif inc == 3:
@@ -299,6 +303,12 @@ def clear_rows(grid, locked):
     else:
         scoremultiplyer = inc
     score+= scoremultiplyer
+
+    if inc != 0:
+        speed_multi = score *0.002
+        fall_speed =  0.27 - speed_multi
+        print(fall_speed)
+    print(inc) 
 
     if inc > 0:
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
@@ -376,6 +386,7 @@ def main():
     global grid
     global change_piece
     global score
+    global fall_speed
     
 
     locked_positions = {}  # (x,y):(255,0,0)
@@ -403,7 +414,9 @@ def main():
     
 
     while run:
-        fall_speed = 0.27
+        
+
+        
         
 
 
